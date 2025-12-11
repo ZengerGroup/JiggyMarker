@@ -58,7 +58,38 @@ namespace JiggyMarker
         public int GetGlueCount()
         {
             string[] glueFiles = Directory.GetFiles(Configurator.GlueSpreads);
-            return glueFiles.Length / 3;
+            List<string> uniqueOrders = GetGlueOrders(glueFiles);
+            int GlueCount = CountGlueQty(uniqueOrders);
+            for(int i = 0; i < glueFiles.Length; i++)
+            {
+                File.Delete(glueFiles[i]);
+            }
+            return GlueCount;
+        }
+        private List<string> GetGlueOrders(string[] glueFiles)
+        {
+            List<string> uniqueOrders = new List<string>();
+            for (int i = 0; i < glueFiles.Length; i++)
+            {
+                bool found = false;
+                for(int j = 0; j < uniqueOrders.Count; j++) 
+                    if (Path.GetFileName(glueFiles[i]).Split("-")[0] == uniqueOrders[j].Split("-")[0])
+                    {
+                        found = true;
+                        break;
+                    }
+                if (found == false) uniqueOrders.Add(Path.GetFileName(glueFiles[i]));
+            }
+            return uniqueOrders;
+        }
+        public int CountGlueQty(List<string> orders)
+        {
+            int total = 0;
+            for(int i = 0; i < orders.Count; i++)
+            {
+                total += Int32.Parse(orders[i].Split("-")[3].Substring(3));
+            }
+            return total;
         }
     }
 }

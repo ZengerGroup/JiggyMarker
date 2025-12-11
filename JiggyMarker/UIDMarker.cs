@@ -61,7 +61,7 @@ namespace JiggyMarker
             switch (Piece)
             {
                 case "sleeve":
-                    gfx.RotateAtTransform(90, new XPoint(35, 275));
+                    gfx.RotateAtTransform(90, new XPoint(45, 275));
                     break;
                 case "puzzle":
                     gfx.RotateAtTransform(270, new XPoint(60, 1100));
