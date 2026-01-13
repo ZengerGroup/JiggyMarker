@@ -48,20 +48,17 @@ namespace JiggyMarker
             UniqueID = String.Format("{0}-{1}-{2}-{3}",DateTime.Now.ToString("MMddyy"), data.Type, data.Order, sequence.ToString("D4"));
             if (combo) UniqueID += "C";
         }
+
         public void Write()
         {
             PdfDocument document = new PdfDocument();
             document = PdfReader.Open(FilePath);
-            if (Piece == "insert")
-            {
-
-                if (document.Pages.Count < 2) document.AddPage(GetTemplatePage());
-            }
+            if (Piece == "insert" && document.Pages.Count < 2) document.AddPage(GetTemplatePage());
             var gfx = XGraphics.FromPdfPage((Piece == "insert") ? document.Pages[1] : document.Pages[0], XGraphicsPdfPageOptions.Append);
             switch (Piece)
             {
                 case "sleeve":
-                    gfx.RotateAtTransform(90, new XPoint(45, 275));
+                    gfx.RotateAtTransform(90, new XPoint(35, 275));
                     break;
                 case "puzzle":
                     gfx.RotateAtTransform(270, new XPoint(60, 1100));
