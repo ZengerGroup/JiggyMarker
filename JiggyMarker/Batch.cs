@@ -152,6 +152,21 @@ namespace JiggyMarker
             if (combinedFile.PageCount > 0) combinedFile.Save(outputName);
             combinedFile.Close();
         }
+        private void BuildPuzzleOutput(string type, string rework, string[] puzzleFiles)
+        {
+            if(puzzleFiles.Length < 601)
+                BuildOutputFile(Path.Combine(Configurator.PuzzleOutput, String.Format("{0}-{1}Puzzles{2}.pdf", rework, type, DateTime.Now.ToString("MMddyy"))), puzzleFiles);
+            else
+            {
+                IEnumerable<string[]> splitPuzzles = puzzleFiles.Chunk(500);
+                int batchCount = 1;
+                foreach(var chunk in splitPuzzles)
+                {
+                    BuildOutputFile(Path.Combine(Configurator.PuzzleOutput, String.Format("{0}-{1}Puzzles{2}_part{3}.pdf", rework, type, DateTime.Now.ToString("MMddyy"), batchCount)), chunk);
+                    batchCount++;
+                }
+            }
+        }
         private void CleanUp()
         {
             foreach (string file in Directory.GetFiles(Configurator.PuzzleAssembly)) File.Delete(file);
