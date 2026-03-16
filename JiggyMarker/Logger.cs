@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 namespace JiggyMarker
 {
-    
     internal static class Logger
     {
         static string LogPath = Path.Combine(Configurator.LogPath, String.Format("{0}.txt", DateTime.Now.ToString("MMMyyyy")));
@@ -15,7 +14,24 @@ namespace JiggyMarker
         {
             message = String.Format(message, messageArgs);
             message += Environment.NewLine;
-            File.AppendAllText(LogPath, (timestamp) ? String.Format("{0}: {1}", DateTime.Now.ToString("F"), message) : message);
+            int writeAttempts = 0;
+            while (writeAttempts < 3)
+            {
+                try
+                {
+                    File.AppendAllText(LogPath, (timestamp) ? String.Format("{0}: {1}", DateTime.Now.ToString("F"), message) : message);
+                    break;
+                }
+                catch
+                {
+                    writeAttempts++;
+                }
+            }
+            if (writeAttempts == 3)
+            {
+                string errorPath = Path.Combine(Configurator.LogPath, String.Format("{1}.txt", DateTime.Now.ToString("fffffff")));
+                File.AppendAllText(errorPath, String.Format("UNABLE TO ACCESS LOG\n{0}", message));
+            }
         }
         public static void ErrorExit(string[] message, int code)
         {
@@ -30,7 +46,7 @@ namespace JiggyMarker
                 "*****START*****" + Environment.NewLine +
                 "*****{0}*****" + Environment.NewLine +
                 "{1}" + Environment.NewLine +
-                "******END******", DateTime.Now.ToString("ddMMM"), longMessage));
+                "******END******", DateTime.Now.ToString("s"), longMessage));
             Environment.Exit(1);
         }
     }
