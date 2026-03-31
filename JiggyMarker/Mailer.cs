@@ -26,7 +26,7 @@ namespace JiggyMarker
         public void SendMail(int SRLength, int JRLength, int comboLength, int srCount, int jrCount, int glueCount)
         {
             Message.Body = BuildMessage(SRLength, JRLength, comboLength, srCount, jrCount, glueCount);
-            string[] ReportFiles = Directory.GetFiles(Configurator.ReportDir);
+            string[] ReportFiles = Directory.GetFiles(Path.Combine(Configurator.ReportDir, "ReportHold"));
             for(int i = 0; i < ReportFiles.Length; i++)
             {
                 FileStream FS = new FileStream(ReportFiles[i], FileMode.Open, FileAccess.Read);

@@ -31,7 +31,7 @@ namespace JiggyMarker
         }
         public void GenerateErrorReport(string JobNumber)
         {
-            string ReportPath = Path.Combine(Configurator.ReportDir, String.Format("{0}-ErrorReport-{1}.csv", JobNumber, DateTime.Now.ToString("MMddyy")));
+            string ReportPath = Path.Combine(Configurator.ReportDir, "ReportHold", String.Format("{0}-ErrorReport-{1}.csv", JobNumber, DateTime.Now.ToString("MMddyy")));
             File.AppendAllText(ReportPath, "\"Page Size Errors\",\"All Other Errors\"" + Environment.NewLine);
             int index = 0;
             while(index < PageSize.Length || index < GeneralErrors.Count)

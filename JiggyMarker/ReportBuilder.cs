@@ -33,7 +33,7 @@ namespace JiggyMarker
         public void GenerateBatchReport((string[][] Srs, string[][] Jrs, string[][] Combos, int SrCount, int JrCount) mainBatch)
         {
             MainCounts = (mainBatch.Srs.Length, mainBatch.Jrs.Length, mainBatch.Combos.Length, mainBatch.SrCount, mainBatch.JrCount);
-            string ReportPath = Path.Combine(Configurator.ReportDir, String.Format("{0}-BatchReport-{1}.csv", JobNumber, DateTime.Now.ToString("MMddyy")));
+            string ReportPath = Path.Combine(Configurator.ReportDir, "Assembly", String.Format("{0}-BatchReport-{1}.csv", JobNumber, DateTime.Now.ToString("MMddyy")));
             File.AppendAllText(ReportPath, "\"SR Orders\",\"QTY\",\"JR Orders\",\"QTY\",\"Combo Orders\",\"QTY\"" + Environment.NewLine);
             int index = 0;
             while (index < mainBatch.Srs.Length || index < mainBatch.Jrs.Length || index < mainBatch.Combos.Length)
@@ -44,16 +44,20 @@ namespace JiggyMarker
                     index < mainBatch.Combos.Length ? mainBatch.Combos[index][0] + "-" + mainBatch.Combos[index][1] : "", index < mainBatch.Combos.Length ? mainBatch.Combos[index][2] : ""));
                 index++;
             }
+            File.Copy(ReportPath, Path.Combine(Configurator.ReportDir, "Processing", Path.GetFileName(ReportPath)));
+            File.Move(ReportPath, Path.Combine(Configurator.ReportDir, "ReportHold", Path.GetFileName(ReportPath)));
         }
         public void GenerateReprintReport((int Puzzles, int Sleeves, int Inserts, int Labels, int Posters) reprintBatch)
         {
-            string ReportPath = Path.Combine(Configurator.ReportDir, String.Format("{0}-ReprintReport-{1}.csv", JobNumber, DateTime.Now.ToString("MMddyy")));
+            string ReportPath = Path.Combine(Configurator.ReportDir, "Assembly", String.Format("{0}-ReprintReport-{1}.csv", JobNumber, DateTime.Now.ToString("MMddyy")));
             File.AppendAllText(ReportPath, "\"Piece Type\",\"Quantity\"" + Environment.NewLine +
                 String.Format("\"Puzzles\",\"{0}\"", reprintBatch.Puzzles) + Environment.NewLine +
                 String.Format("\"Sleeves\",\"{0}\"", reprintBatch.Sleeves) + Environment.NewLine +
                 String.Format("\"Inserts\",\"{0}\"", reprintBatch.Inserts) + Environment.NewLine +
                 String.Format("\"Labels\",\"{0}\"", reprintBatch.Labels) + Environment.NewLine +
                 String.Format("\"Posters\",\"{0}\"", reprintBatch.Posters) + Environment.NewLine);
+            File.Copy(ReportPath, Path.Combine(Configurator.ReportDir, "Processing", Path.GetFileName(ReportPath)));
+            File.Move(ReportPath, Path.Combine(Configurator.ReportDir, "ReportHold", Path.GetFileName(ReportPath)));
         }
         public int GetGlueCount()
         {
