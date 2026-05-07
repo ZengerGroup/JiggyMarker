@@ -126,7 +126,7 @@ namespace JiggyMarker
         {
             string[] puzzleFiles = Directory.GetFiles(Configurator.PuzzleAssembly);
             if (puzzleFiles.Length > 0)
-                BuildOutputFile(Path.Combine(Configurator.PuzzleOutput, String.Format("{0}-{1}Puzzles{2}.pdf", rework, type, DateTime.Now.ToString("MMddyy"))), puzzleFiles);
+                BuildPuzzleOutput(type, rework, puzzleFiles);
             string[] insertFiles = Directory.GetFiles(Configurator.InsertAssembly);
             if (insertFiles.Length > 0)
                 BuildOutputFile(Path.Combine(Configurator.InsertOutput, String.Format("{0}-{1}Inserts{2}.pdf", rework, type, DateTime.Now.ToString("MMddyy"))), insertFiles);
