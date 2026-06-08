@@ -49,5 +49,10 @@ namespace JiggyMarker
                 "******END******", DateTime.Now.ToString("s"), longMessage));
             Environment.Exit(1);
         }
+        public static void Display(string message, bool timestamp, params string[] messageArgs)
+        {
+            Console.WriteLine(message, messageArgs);
+            Logger.WriteLog(message, timestamp, messageArgs);
+        }
     }
 }

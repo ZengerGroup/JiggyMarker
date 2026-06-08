@@ -108,7 +108,7 @@ namespace JiggyMarker
         {
             string[] puzzleFiles = Directory.GetFiles(Configurator.PuzzleAssembly);
             if(puzzleFiles.Length > 0)
-                BuildOutputFile(Path.Combine(Configurator.PuzzleOutput, String.Format("{0}-{1}Puzzles{2}.pdf", JobNumber, type, DateTime.Now.ToString("MMddyy"))), puzzleFiles);
+                BuildPuzzleOutput(type, puzzleFiles);
             string[] insertFiles = Directory.GetFiles(Configurator.InsertAssembly);
             if(insertFiles.Length > 0)
                 BuildOutputFile(Path.Combine(Configurator.InsertOutput, String.Format("{0}-{1}Inserts{2}.pdf", JobNumber, type, DateTime.Now.ToString("MMddyy"))), insertFiles);
@@ -163,6 +163,21 @@ namespace JiggyMarker
                 foreach(var chunk in splitPuzzles)
                 {
                     BuildOutputFile(Path.Combine(Configurator.PuzzleOutput, String.Format("{0}-{1}Puzzles{2}_part{3}.pdf", rework, type, DateTime.Now.ToString("MMddyy"), batchCount)), chunk);
+                    batchCount++;
+                }
+            }
+        }
+        private void BuildPuzzleOutput(string type, string[] puzzleFiles)
+        {
+            if (puzzleFiles.Length < 601)
+                BuildOutputFile(Path.Combine(Configurator.PuzzleOutput, String.Format("{0}-{1}Puzzles{2}.pdf", JobNumber, type, DateTime.Now.ToString("MMddyy"))), puzzleFiles);
+            else
+            {
+                IEnumerable<string[]> splitPuzzles = puzzleFiles.Chunk(500);
+                int batchCount = 1;
+                foreach (var chunk in splitPuzzles)
+                {
+                    BuildOutputFile(Path.Combine(Configurator.PuzzleOutput, String.Format("{0}-{1}Puzzles{2}_part{3}.pdf", JobNumber, type, DateTime.Now.ToString("MMddyy"), batchCount)), chunk);
                     batchCount++;
                 }
             }
