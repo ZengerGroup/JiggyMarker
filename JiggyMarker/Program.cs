@@ -54,7 +54,9 @@ namespace JiggyMarker
                 Logger.WriteLog("Unable to determine job #. {0} files found in report folder.", false, reports.Length.ToString());
                 return "#ERROR";
             }
-            return Path.GetFileName(reports[0]).Substring(0, 6);
+            string reportName = Path.GetFileName(reports[0]);
+            if (reportName[0] == '_') return reportName.Substring(7,6);
+            else return reportName.Substring(0, 6);
         }
         static void CleanWorkingDir()
         {
