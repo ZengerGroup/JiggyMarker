@@ -10,6 +10,7 @@ namespace JiggyMarker
     {
         static string LogPath = Path.Combine(Configurator.LogPath, String.Format("{0}.txt", DateTime.Now.ToString("MMMyyyy")));
         static string CrashPath = Path.Combine(Configurator.LogPath, String.Format("Crash_{0}.txt", DateTime.Now.ToString("MMMyyyy")));
+        public static string JobNumber = "000000";
         public static void WriteLog(string message, bool timestamp, params string[] messageArgs)
         {
             message = String.Format(message, messageArgs);
@@ -36,6 +37,7 @@ namespace JiggyMarker
         public static void ErrorExit(string[] message, int code)
         {
             WriteLog(message[0], true);
+            GenerateIssueJson(message[0], "Error");
             string longMessage = "";
             for (int i = 0; i < message.Length; i++)
             {
@@ -49,10 +51,20 @@ namespace JiggyMarker
                 "******END******", DateTime.Now.ToString("s"), longMessage));
             Environment.Exit(1);
         }
-        public static void Display(string message, bool timestamp, params string[] messageArgs)
+        public static void GenerateIssueJson(string message, string issueType)
         {
-            Console.WriteLine(message, messageArgs);
-            Logger.WriteLog(message, timestamp, messageArgs);
+            string jsonString = String.Format("\"JobNumber\":\"{0}\",\"IssueType\":\"{1}\",\"Message\":\"{2}\",\"AppName\":\"Jiggy Puzzles Marker\",\"TimeStamp\":\"{3}\",\"ContactNeeded\":\"{4}\"",
+                JobNumber, issueType, message, DateTime.Now.ToString("MM-dd-yyyy_HH:mm:ss"), "Marc Fortner");
+            string jsonPath = Path.Combine(Configurator.IssuePath, GeneratePathName());
+            jsonString = "{" + jsonString + "}";
+            File.AppendAllText(jsonPath, jsonString);
+        }
+        private static string GeneratePathName()
+        {
+            string randomChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            string chosenChars = "";
+            for (int i = 0; i < 6; i++) chosenChars += randomChars[new Random().Next(0, 36)];
+            return String.Format("CinemaPuzzles_Assembly_{0}.json", chosenChars);
         }
     }
 }

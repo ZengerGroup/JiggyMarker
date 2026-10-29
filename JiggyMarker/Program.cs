@@ -13,19 +13,19 @@ namespace JiggyMarker
             if (!Directory.Exists(Configurator.WorkingDir)) Logger.ErrorExit(["Input directory not found.", Configurator.WorkingDir], 42069);
             System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
             GlobalFontSettings.FontResolver = new FailsafeFontResolver();
-            string ZengerJobNumber = GetJobNumber();
-            Logger.WriteLog("Starting batch for {0}. Job # {1}.", true, DateTime.Now.ToString("d"), ZengerJobNumber);
+            Logger.JobNumber = GetJobNumber();
+            Logger.WriteLog("Starting batch for {0}. Job # {1}.", true, DateTime.Now.ToString("d"), Logger.JobNumber);
             ErrorHandler Errors = new ErrorHandler();
 
 
             //Run main batch:
             Logger.WriteLog("Beginning main batch.", false);
-            Batch DaysBatch = new Batch(Configurator.WorkingDir, ZengerJobNumber, Errors);
+            Batch DaysBatch = new Batch(Configurator.WorkingDir, Logger.JobNumber, Errors);
             DaysBatch.WorkBatch();
             Logger.WriteLog("Batch complete.", false);
 
             //Run reprint batch:
-            Batch ReprintBatch = new Batch(Configurator.ReprintFiles, ZengerJobNumber, Errors);
+            Batch ReprintBatch = new Batch(Configurator.ReprintFiles, Logger.JobNumber, Errors);
             if (ReprintBatch.OrdersExist())
             {
                 Logger.WriteLog("Beginning reprint batch.", false);
@@ -35,7 +35,7 @@ namespace JiggyMarker
 
             //Run reporting:
             Logger.WriteLog("Generating reporting.", false);
-            ReportBuilder Report = new ReportBuilder(ZengerJobNumber, Errors);
+            ReportBuilder Report = new ReportBuilder(Logger.JobNumber, Errors);
             Report.GenerateBatchReport(DaysBatch.GetBatchSummary());
             DaysBatch.Dispose();
             if (ReprintBatch.OrdersExist())

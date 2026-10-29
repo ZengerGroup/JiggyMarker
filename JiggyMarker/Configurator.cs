@@ -12,6 +12,7 @@ namespace JiggyMarker
     {
         public static string Template = ConfigurationManager.AppSettings["Template"];
         public static string LogPath = ConfigurationManager.AppSettings["LogPath"];
+        public static string IssuePath = ConfigurationManager.AppSettings["IssuePath"];
         public static string ReportEmail = ConfigurationManager.AppSettings["ReportEmail"];
         public static string ReportDir = ConfigurationManager.AppSettings["ReportDir"];
         public static string WorkingDir = ConfigurationManager.AppSettings["WorkingDir"];
